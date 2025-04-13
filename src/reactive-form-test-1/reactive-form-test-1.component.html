@@ -1,0 +1,17 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div formArrayName="friends">
+      @for (friend of friendsArray.controls; track friend) {
+        <div [formGroup]="friend" class="friend-item">
+          <label>
+            Name:
+            <input formControlName="name" type="text" />
+          </label>
+          <label>
+            Age:
+            <input formControlName="age" type="number" />
+          </label>
+        </div>
+      }
+    </div>
+    <button type="submit">Submit</button>
+  </form>
