@@ -1,0 +1,17 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div formArrayName="friends">
+      @for (friend of friendsArray.controls; track friend) {
+        <div [formGroup]="friend" class="friend-item">
+          <input formControlName="name" placeholder="Name" />
+          <input formControlName="age" type="number" placeholder="Age" />
+          <input formControlName="contactNo" placeholder="Contact No" />
+          <input formControlName="work" placeholder="Work" />
+          <input formControlName="address" placeholder="Address" />
+          <button type="button" (click)="removeFriend(friendsArray.controls.indexOf(friend))">Remove</button>
+        </div>
+      }
+    </div>
+    
+    <button type="button" (click)="addFriend()">Add Friend</button>
+    <button type="submit">Submit</button>
+  </form>
