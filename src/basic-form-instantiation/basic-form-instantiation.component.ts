@@ -8,7 +8,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
   templateUrl: './basic-form-instantiation.component.html',
   styleUrls: ['./basic-form-instantiation.component.scss']
 })
-export class ReactiveFormTest2Component implements OnInit {
+export class BasicFormInstantiation implements OnInit {
 
   form!: FormGroup<IFriendsForm>;
 

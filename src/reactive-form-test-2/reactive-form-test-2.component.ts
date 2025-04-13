@@ -49,6 +49,23 @@ export class ReactiveFormTest2Component implements OnInit {
   onSubmit(): void {
     alert(JSON.stringify(this.form.getRawValue(), null, 2));
   }
+  
+  // Add a new friend FormGroup to the FormArray.
+  addFriend(): void {
+    const newFriend: DtoFriends = {
+      name: '',
+      age: 0,
+      contactNo: '',
+      work: '',
+      address: ''
+    };
+    this.friendsArray.push(this.createFriendForm(newFriend));
+  }
+
+  // Remove a friend FormGroup from the FormArray at a given index.
+  removeFriend(index: number): void {
+    this.friendsArray.removeAt(index);
+  }
 
   // Create a form group for all friends based on an array of DtoFriends objects.
   private createFriendsForm(data: DtoFriends[]): FormGroup<IFriendsForm> {
@@ -68,23 +85,7 @@ export class ReactiveFormTest2Component implements OnInit {
       address: new FormControl(data?.address ?? '', { nonNullable: true, validators: [Validators.required] })
     });
   }
-  
-  // Add a new friend FormGroup to the FormArray.
-  addFriend(): void {
-    const newFriend: DtoFriends = {
-      name: '',
-      age: 0,
-      contactNo: '',
-      work: '',
-      address: ''
-    };
-    this.friendsArray.push(this.createFriendForm(newFriend));
-  }
 
-  // Remove a friend FormGroup from the FormArray at a given index.
-  removeFriend(index: number): void {
-    this.friendsArray.removeAt(index);
-  }
 }
 
 // Updated DTO from API including new fields.
