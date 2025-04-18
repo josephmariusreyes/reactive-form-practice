@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-reactive-form-test-2',
+  selector: 'reactive-form-basic-form-array',
   imports: [
     ReactiveFormsModule
   ],
-  templateUrl: './reactive-form-test-2.component.html',
-  styleUrls: ['./reactive-form-test-2.component.scss']
+  templateUrl: './reactive-form-basic-form-array.component.html',
+  styleUrls: ['./reactive-form-basic-form-array.component.scss']
 })
-export class ReactiveFormTest2Component implements OnInit {
+export class ReactiveFormBasicFormArray implements OnInit {
 
   form!: FormGroup<IFriendsForm>;
 

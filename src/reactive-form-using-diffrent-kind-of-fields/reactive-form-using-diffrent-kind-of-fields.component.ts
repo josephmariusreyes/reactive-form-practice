@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+//mariustodo: this is work in progress
+//test out having check boxes
+//test out having radio boxes
+//test out having drop down
+//test out having date field
+//reference back to the filter widget i create in auction for this
 @Component({
-  selector: 'basic-form-instantiation',
+  selector: 'reactive-form-using-diffrent-kind-of-fields',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './basic-form-instantiation.component.html',
-  styleUrls: ['./basic-form-instantiation.component.scss']
+  templateUrl: './reactive-form-using-diffrent-kind-of-fields.component.html',
+  styleUrls: ['./reactive-form-using-diffrent-kind-of-fields.component.scss']
 })
-export class BasicFormInstantiation implements OnInit {
+export class ReactiveFormUsingDIfferentKindOfFields implements OnInit {
 
   form!: FormGroup<IFriendsForm>;
 
@@ -64,6 +70,7 @@ export class BasicFormInstantiation implements OnInit {
   }
 }
 
+//Api data model
 export interface DtoFriends {
   name: string;
   age: number;
@@ -72,6 +79,7 @@ export interface DtoFriends {
   address: string;
 }
 
+//Form inteface
 export interface IFriendsForm {
   friends: FormArray<FormGroup<FriendForm>>;
 }

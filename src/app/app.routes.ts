@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { ReactiveFormTest1Component } from '../reactive-form-test-1/reactive-form-test-1.component';
-import { ReactiveFormTest2Component } from '../reactive-form-test-2/reactive-form-test-2.component';
-import { BasicFormInstantiation } from '../basic-form-instantiation/basic-form-instantiation.component';
+import { ReactiveFormBasicForm } from '../reactive-form-basic-form/reactive-form-basic-form.component';
+import { ReactiveFormBasicFormArray } from '../reactive-form-basic-form-array/reactive-form-basic-form-array.component';
+import { ReactiveFormUsingDIfferentKindOfFields } from '../reactive-form-using-diffrent-kind-of-fields/reactive-form-using-diffrent-kind-of-fields.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'test1', pathMatch: 'full' },
-  { path: 'test1', component: ReactiveFormTest1Component },
-  { path: 'test2', component: ReactiveFormTest2Component },
-  { path:'basic-form-instantiation', component:BasicFormInstantiation }
+  { path: 'test1', component: ReactiveFormBasicForm },
+  { path: 'test2', component: ReactiveFormBasicFormArray },
+  { path:'test3', component:ReactiveFormUsingDIfferentKindOfFields }
 ];
