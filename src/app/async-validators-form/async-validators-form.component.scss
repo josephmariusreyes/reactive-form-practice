@@ -1,0 +1,363 @@
+.form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    font-size: 2rem;
+  }
+}
+
+.info-panel {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    
+    li {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.account-form {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.form-section {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #17a2b8;
+
+  h3 {
+    color: #2c3e50;
+    margin: 0 0 1.5rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #ecf0f1;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.9rem;
+  }
+
+  .field-hint {
+    color: #6c757d;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+
+  .validation-message {
+    color: #17a2b8;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .error-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+      content: '⚠️';
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// Input with status styling
+.input-with-status {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 0.75rem;
+    border: 2px solid #e1e8ed;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: #17a2b8;
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+    }
+
+    &.error {
+      border-color: #e74c3c;
+      background-color: #fdf2f2;
+
+      &:focus {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+      }
+    }
+
+    &.validating {
+      border-color: #17a2b8;
+      background-color: #f0f9ff;
+    }
+
+    &::placeholder {
+      color: #a0a0a0;
+    }
+  }
+
+  .validation-status {
+    position: absolute;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+
+    .spinner {
+      animation: spin 1s linear infinite;
+      font-size: 1rem;
+    }
+
+    .success {
+      color: #28a745;
+      font-size: 1rem;
+    }
+
+    .error-icon {
+      color: #e74c3c;
+      font-size: 1rem;
+    }
+  }
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+
+  .input-with-status {
+    flex: 1;
+  }
+
+  .generate-btn {
+    background: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background: #5a32a3;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(111, 66, 193, 0.3);
+    }
+  }
+}
+
+// Animation for spinner
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Form actions
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #ecf0f1;
+}
+
+.submit-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #17a2b8;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+  }
+
+  &:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.form-summary-error {
+  background: #fdf2f2;
+  color: #e74c3c;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #e74c3c;
+  margin-top: 2rem;
+
+  h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+
+    li {
+      margin: 0.5rem 0;
+      font-weight: 500;
+    }
+  }
+}
+
+.debug-section {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+
+  h3 {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: #495057;
+  }
+
+  details {
+    margin-top: 1rem;
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    pre {
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  .account-form {
+    padding: 1rem;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .input-with-button {
+    flex-direction: column;
+
+    .generate-btn {
+      align-self: flex-start;
+    }
+  }
+
+  .info-panel {
+    padding: 1rem;
+
+    ul {
+      padding-left: 1rem;
+    }
+  }
+}

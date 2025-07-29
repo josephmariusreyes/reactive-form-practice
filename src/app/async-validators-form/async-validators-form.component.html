@@ -1,0 +1,354 @@
+<div class="form-container">
+  <h2>Advanced Account Setup (Async Validators)</h2>
+  
+  <div class="info-panel">
+    <h3>🔍 Real-time Validation Features</h3>
+    <ul>
+      <li>Username availability checking</li>
+      <li>Email verification and domain validation</li>
+      <li>Domain availability lookup</li>
+      <li>API key validation</li>
+      <li>GitHub repository verification</li>
+      <li>Phone number carrier validation</li>
+    </ul>
+  </div>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="account-form">
+    
+    <!-- Account Credentials Section -->
+    <div class="form-section">
+      <h3>🔐 Account Credentials</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <div class="input-with-status">
+            <input 
+              id="username"
+              type="text"
+              formControlName="username"
+              placeholder="Enter unique username"
+              [class.error]="isFieldInvalid('username')"
+              [class.validating]="isFieldValidating('username')">
+            <div class="validation-status">
+              @if (isFieldValidating('username')) {
+                <span class="spinner">⏳</span>
+              } @else if (form.get('username')?.valid && form.get('username')?.value) {
+                <span class="success">✅</span>
+              } @else if (isFieldInvalid('username')) {
+                <span class="error-icon">❌</span>
+              }
+            </div>
+          </div>
+          @if (isFieldValidating('username')) {
+            <span class="validation-message">Checking username availability...</span>
+          }
+          @if (isFieldInvalid('username')) {
+            <div class="error-messages">
+              @if (getFieldError('username', 'required')) {
+                <span class="error-message">Username is required</span>
+              }
+              @if (getFieldError('username', 'minlength')) {
+                <span class="error-message">Username must be at least 3 characters</span>
+              }
+              @if (getFieldError('username', 'pattern')) {
+                <span class="error-message">Username can only contain letters, numbers, and underscores</span>
+              }
+              @if (getFieldError('username', 'usernameExists')) {
+                <span class="error-message">{{ getFieldError('username', 'usernameExists') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Letters, numbers, and underscores only</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <div class="input-with-status">
+            <input 
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="user@company.com"
+              [class.error]="isFieldInvalid('email')"
+              [class.validating]="isFieldValidating('email')">
+            <div class="validation-status">
+              @if (isFieldValidating('email')) {
+                <span class="spinner">⏳</span>
+              } @else if (form.get('email')?.valid && form.get('email')?.value) {
+                <span class="success">✅</span>
+              } @else if (isFieldInvalid('email')) {
+                <span class="error-icon">❌</span>
+              }
+            </div>
+          </div>
+          @if (isFieldValidating('email')) {
+            <span class="validation-message">Verifying email address...</span>
+          }
+          @if (isFieldInvalid('email')) {
+            <div class="error-messages">
+              @if (getFieldError('email', 'required')) {
+                <span class="error-message">Email is required</span>
+              }
+              @if (getFieldError('email', 'email')) {
+                <span class="error-message">Please enter a valid email address</span>
+              }
+              @if (getFieldError('email', 'emailExists')) {
+                <span class="error-message">{{ getFieldError('email', 'emailExists') }}</span>
+              }
+              @if (getFieldError('email', 'disposableEmail')) {
+                <span class="error-message">{{ getFieldError('email', 'disposableEmail') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">No disposable email addresses allowed</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Information Section -->
+    <div class="form-section">
+      <h3>🏢 Company Information</h3>
+      
+      <div class="form-group">
+        <label for="companyDomain">Company Domain *</label>
+        <div class="input-with-status">
+          <input 
+            id="companyDomain"
+            type="text"
+            formControlName="companyDomain"
+            placeholder="yourcompany.com"
+            [class.error]="isFieldInvalid('companyDomain')"
+            [class.validating]="isFieldValidating('companyDomain')">
+          <div class="validation-status">
+            @if (isFieldValidating('companyDomain')) {
+              <span class="spinner">⏳</span>
+            } @else if (form.get('companyDomain')?.valid && form.get('companyDomain')?.value) {
+              <span class="success">✅</span>
+            } @else if (isFieldInvalid('companyDomain')) {
+              <span class="error-icon">❌</span>
+            }
+          </div>
+        </div>
+        @if (isFieldValidating('companyDomain')) {
+          <span class="validation-message">Checking domain availability...</span>
+        }
+        @if (isFieldInvalid('companyDomain')) {
+          <div class="error-messages">
+            @if (getFieldError('companyDomain', 'required')) {
+              <span class="error-message">Company domain is required</span>
+            }
+            @if (getFieldError('companyDomain', 'pattern')) {
+              <span class="error-message">Please enter a valid domain (e.g., company.com)</span>
+            }
+            @if (getFieldError('companyDomain', 'domainReserved')) {
+              <span class="error-message">{{ getFieldError('companyDomain', 'domainReserved') }}</span>
+            }
+            @if (getFieldError('companyDomain', 'domainTaken')) {
+              <span class="error-message">{{ getFieldError('companyDomain', 'domainTaken') }}</span>
+            }
+            @if (getFieldError('companyDomain', 'domainError')) {
+              <span class="error-message">{{ getFieldError('companyDomain', 'domainError') }}</span>
+            }
+          </div>
+        }
+        <small class="field-hint">We'll check if this domain is available for registration</small>
+      </div>
+    </div>
+
+    <!-- API Configuration Section -->
+    <div class="form-section">
+      <h3>🔑 API Configuration</h3>
+      
+      <div class="form-group">
+        <label for="apiKey">API Key *</label>
+        <div class="input-with-button">
+          <div class="input-with-status">
+            <input 
+              id="apiKey"
+              type="text"
+              formControlName="apiKey"
+              placeholder="32-character hexadecimal API key"
+              [class.error]="isFieldInvalid('apiKey')"
+              [class.validating]="isFieldValidating('apiKey')">
+            <div class="validation-status">
+              @if (isFieldValidating('apiKey')) {
+                <span class="spinner">⏳</span>
+              } @else if (form.get('apiKey')?.valid && form.get('apiKey')?.value) {
+                <span class="success">✅</span>
+              } @else if (isFieldInvalid('apiKey')) {
+                <span class="error-icon">❌</span>
+              }
+            </div>
+          </div>
+          <button type="button" class="generate-btn" (click)="generateApiKey()">
+            🎲 Generate
+          </button>
+        </div>
+        @if (isFieldValidating('apiKey')) {
+          <span class="validation-message">Validating API key...</span>
+        }
+        @if (isFieldInvalid('apiKey')) {
+          <div class="error-messages">
+            @if (getFieldError('apiKey', 'required')) {
+              <span class="error-message">API key is required</span>
+            }
+            @if (getFieldError('apiKey', 'invalidApiKeyFormat')) {
+              <span class="error-message">{{ getFieldError('apiKey', 'invalidApiKeyFormat') }}</span>
+            }
+            @if (getFieldError('apiKey', 'inactiveApiKey')) {
+              <span class="error-message">{{ getFieldError('apiKey', 'inactiveApiKey') }}</span>
+            }
+          </div>
+        }
+        <small class="field-hint">32 hexadecimal characters (0-9, a-f)</small>
+      </div>
+    </div>
+
+    <!-- Repository Section -->
+    <div class="form-section">
+      <h3>📁 Repository Information</h3>
+      
+      <div class="form-group">
+        <label for="repositoryUrl">GitHub Repository URL *</label>
+        <div class="input-with-status">
+          <input 
+            id="repositoryUrl"
+            type="url"
+            formControlName="repositoryUrl"
+            placeholder="https://github.com/username/repository"
+            [class.error]="isFieldInvalid('repositoryUrl')"
+            [class.validating]="isFieldValidating('repositoryUrl')">
+          <div class="validation-status">
+            @if (isFieldValidating('repositoryUrl')) {
+              <span class="spinner">⏳</span>
+            } @else if (form.get('repositoryUrl')?.valid && form.get('repositoryUrl')?.value) {
+              <span class="success">✅</span>
+            } @else if (isFieldInvalid('repositoryUrl')) {
+              <span class="error-icon">❌</span>
+            }
+          </div>
+        </div>
+        @if (isFieldValidating('repositoryUrl')) {
+          <span class="validation-message">Verifying repository existence...</span>
+        }
+        @if (isFieldInvalid('repositoryUrl')) {
+          <div class="error-messages">
+            @if (getFieldError('repositoryUrl', 'required')) {
+              <span class="error-message">Repository URL is required</span>
+            }
+            @if (getFieldError('repositoryUrl', 'pattern')) {
+              <span class="error-message">Must be a valid GitHub repository URL</span>
+            }
+            @if (getFieldError('repositoryUrl', 'repositoryNotFound')) {
+              <span class="error-message">{{ getFieldError('repositoryUrl', 'repositoryNotFound') }}</span>
+            }
+            @if (getFieldError('repositoryUrl', 'missingRequiredFiles')) {
+              <span class="error-message">{{ getFieldError('repositoryUrl', 'missingRequiredFiles') }}</span>
+            }
+            @if (getFieldError('repositoryUrl', 'repositoryError')) {
+              <span class="error-message">{{ getFieldError('repositoryUrl', 'repositoryError') }}</span>
+            }
+          </div>
+        }
+        <small class="field-hint">Must be a public repository with package.json and README.md</small>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="form-section">
+      <h3>📞 Contact Information</h3>
+      
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number *</label>
+        <div class="input-with-status">
+          <input 
+            id="phoneNumber"
+            type="tel"
+            formControlName="phoneNumber"
+            placeholder="+1234567890"
+            [class.error]="isFieldInvalid('phoneNumber')"
+            [class.validating]="isFieldValidating('phoneNumber')">
+          <div class="validation-status">
+            @if (isFieldValidating('phoneNumber')) {
+              <span class="spinner">⏳</span>
+            } @else if (form.get('phoneNumber')?.valid && form.get('phoneNumber')?.value) {
+              <span class="success">✅</span>
+            } @else if (isFieldInvalid('phoneNumber')) {
+              <span class="error-icon">❌</span>
+            }
+          </div>
+        </div>
+        @if (isFieldValidating('phoneNumber')) {
+          <span class="validation-message">Validating phone number...</span>
+        }
+        @if (isFieldInvalid('phoneNumber')) {
+          <div class="error-messages">
+            @if (getFieldError('phoneNumber', 'required')) {
+              <span class="error-message">Phone number is required</span>
+            }
+            @if (getFieldError('phoneNumber', 'pattern')) {
+              <span class="error-message">Please enter a valid international phone number</span>
+            }
+            @if (getFieldError('phoneNumber', 'invalidCarrier')) {
+              <span class="error-message">{{ getFieldError('phoneNumber', 'invalidCarrier') }}</span>
+            }
+            @if (getFieldError('phoneNumber', 'phoneNumberInUse')) {
+              <span class="error-message">{{ getFieldError('phoneNumber', 'phoneNumberInUse') }}</span>
+            }
+          </div>
+        }
+        <small class="field-hint">International format with country code (e.g., +1234567890)</small>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" [disabled]="form.invalid || isLoading">
+        @if (isLoading) {
+          <span class="loading-spinner">⏳</span>
+          Creating Account...
+        } @else {
+          🚀 Create Account
+        }
+      </button>
+    </div>
+    
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        <h4>⚠️ Please complete all validations:</h4>
+        <ul>
+          @if (form.get('username')?.invalid) {
+            <li>Username validation</li>
+          }
+          @if (form.get('email')?.invalid) {
+            <li>Email verification</li>
+          }
+          @if (form.get('companyDomain')?.invalid) {
+            <li>Domain availability check</li>
+          }
+          @if (form.get('apiKey')?.invalid) {
+            <li>API key validation</li>
+          }
+          @if (form.get('repositoryUrl')?.invalid) {
+            <li>Repository verification</li>
+          }
+          @if (form.get('phoneNumber')?.invalid) {
+            <li>Phone number validation</li>
+          }
+        </ul>
+      </div>
+    }
+  </form>
+  
+  <!-- Form Debug Info -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Pending:</strong> {{ form.pending }}</p>
+    <details>
+      <summary><strong>Form Value:</strong></summary>
+      <pre>{{ form.value | json }}</pre>
+    </details>
+  </div>
+</div>
