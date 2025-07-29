@@ -1,17 +1,305 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div formArrayName="friends">
-      @for (friend of friendsArray.controls; track friend) {
-        <div [formGroup]="friend" class="friend-item">
-          <input formControlName="name" placeholder="Name" />
-          <input formControlName="age" type="number" placeholder="Age" />
-          <input formControlName="contactNo" placeholder="Contact No" />
-          <input formControlName="work" placeholder="Work" />
-          <input formControlName="address" placeholder="Address" />
-          <button type="button" (click)="removeFriend(friendsArray.controls.indexOf(friend))">Remove</button>
+<div class="form-container">
+  <h2>User Profile Form (Different Field Types)</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="profile-form">
+    
+    <!-- Personal Information Section -->
+    <div class="form-section">
+      <h3>Personal Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input 
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Enter your first name"
+            [class.error]="form.get('firstName')?.invalid && form.get('firstName')?.touched">
+          @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+            <span class="error-message">
+              @if (form.get('firstName')?.errors?.['required']) {
+                First name is required
+              } @else if (form.get('firstName')?.errors?.['minlength']) {
+                Minimum 2 characters required
+              }
+            </span>
+          }
         </div>
-      }
+        
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input 
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Enter your last name"
+            [class.error]="form.get('lastName')?.invalid && form.get('lastName')?.touched">
+          @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+            <span class="error-message">
+              @if (form.get('lastName')?.errors?.['required']) {
+                Last name is required
+              } @else if (form.get('lastName')?.errors?.['minlength']) {
+                Minimum 2 characters required
+              }
+            </span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="age">Age *</label>
+          <input 
+            id="age"
+            type="number"
+            formControlName="age"
+            min="18"
+            max="120"
+            [class.error]="form.get('age')?.invalid && form.get('age')?.touched">
+          @if (form.get('age')?.invalid && form.get('age')?.touched) {
+            <span class="error-message">
+              @if (form.get('age')?.errors?.['required']) {
+                Age is required
+              } @else if (form.get('age')?.errors?.['min']) {
+                Must be at least 18 years old
+              } @else if (form.get('age')?.errors?.['max']) {
+                Must be less than 120 years old
+              }
+            </span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth *</label>
+          <input 
+            id="dateOfBirth"
+            type="date"
+            formControlName="dateOfBirth"
+            [class.error]="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched">
+          @if (form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched) {
+            <span class="error-message">Date of birth is required</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="form-section">
+      <h3>Contact Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input 
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="your.email@example.com"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched">
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <span class="error-message">
+              @if (form.get('email')?.errors?.['required']) {
+                Email is required
+              } @else if (form.get('email')?.errors?.['email']) {
+                Please enter a valid email address
+              }
+            </span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input 
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="+1-555-123-4567"
+            [class.error]="form.get('phone')?.invalid && form.get('phone')?.touched">
+          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+            <span class="error-message">Please enter a valid phone number</span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input 
+            id="website"
+            type="url"
+            formControlName="website"
+            placeholder="https://your-website.com"
+            [class.error]="form.get('website')?.invalid && form.get('website')?.touched">
+          @if (form.get('website')?.invalid && form.get('website')?.touched) {
+            <span class="error-message">Please enter a valid URL starting with http:// or https://</span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="country">Country *</label>
+          <select 
+            id="country"
+            formControlName="country"
+            [class.error]="form.get('country')?.invalid && form.get('country')?.touched">
+            <option value="">Select a country</option>
+            @for (country of countries; track country.value) {
+              <option [value]="country.value">{{ country.label }}</option>
+            }
+          </select>
+          @if (form.get('country')?.invalid && form.get('country')?.touched) {
+            <span class="error-message">Please select a country</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Section -->
+    <div class="form-section">
+      <h3>Security</h3>
+      
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <input 
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter a secure password"
+          [class.error]="form.get('password')?.invalid && form.get('password')?.touched">
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span class="error-message">
+            @if (form.get('password')?.errors?.['required']) {
+              Password is required
+            } @else if (form.get('password')?.errors?.['minlength']) {
+              Password must be at least 8 characters long
+            }
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- Personal Details Section -->
+    <div class="form-section">
+      <h3>Personal Details</h3>
+      
+      <div class="form-group">
+        <label>Gender *</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" formControlName="gender" value="male">
+            <span class="radio-custom"></span>
+            Male
+          </label>
+          <label class="radio-option">
+            <input type="radio" formControlName="gender" value="female">
+            <span class="radio-custom"></span>
+            Female
+          </label>
+          <label class="radio-option">
+            <input type="radio" formControlName="gender" value="other">
+            <span class="radio-custom"></span>
+            Other
+          </label>
+        </div>
+        @if (form.get('gender')?.invalid && form.get('gender')?.touched) {
+          <span class="error-message">Please select your gender</span>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea 
+          id="bio"
+          formControlName="bio"
+          rows="4"
+          placeholder="Tell us about yourself..."
+          [class.error]="form.get('bio')?.invalid && form.get('bio')?.touched"></textarea>
+        <small class="char-count">{{ form.get('bio')?.value?.length || 0 }}/500 characters</small>
+        @if (form.get('bio')?.invalid && form.get('bio')?.touched) {
+          <span class="error-message">Bio must be less than 500 characters</span>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="experience">Years of Experience: {{ form.get('experience')?.value }}</label>
+        <input 
+          id="experience"
+          type="range"
+          formControlName="experience"
+          min="0"
+          max="20"
+          class="range-slider">
+        <div class="range-labels">
+          <span>0 years</span>
+          <span>20+ years</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interests Section -->
+    <div class="form-section">
+      <h3>Interests & Hobbies</h3>
+      
+      <div class="form-group">
+        <label>Select your hobbies:</label>
+        <div class="checkbox-grid">
+          @for (hobby of hobbies; track hobby.value) {
+            <label class="checkbox-option">
+              <input 
+                type="checkbox"
+                [checked]="isHobbySelected(hobby.value)"
+                (change)="onHobbyChange(hobby.value, $event)">
+              <span class="checkbox-custom"></span>
+              {{ hobby.label }}
+            </label>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences Section -->
+    <div class="form-section">
+      <h3>Preferences</h3>
+      
+      <div class="form-group">
+        <label class="checkbox-option single-checkbox">
+          <input type="checkbox" formControlName="newsletter">
+          <span class="checkbox-custom"></span>
+          Subscribe to newsletter for updates
+        </label>
+      </div>
+      
+      <div class="form-group">
+        <label class="checkbox-option single-checkbox required">
+          <input type="checkbox" formControlName="agreeToTerms">
+          <span class="checkbox-custom"></span>
+          I agree to the <a href="#" target="_blank">Terms and Conditions</a> *
+        </label>
+        @if (form.get('agreeToTerms')?.invalid && form.get('agreeToTerms')?.touched) {
+          <span class="error-message">You must agree to the terms and conditions</span>
+        }
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="reset-btn" (click)="onReset()">
+        Reset Form
+      </button>
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        Save Profile
+      </button>
     </div>
     
-    <button type="button" (click)="addFriend()">Add Friend</button>
-    <button type="submit">Submit</button>
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        Please fix the errors above before submitting.
+      </div>
+    }
   </form>
+  
+  <!-- Form Debug Info -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Touched:</strong> {{ form.touched }}</p>
+    <p><strong>Value:</strong></p>
+    <pre>{{ form.value | json }}</pre>
+  </div>
+</div>
