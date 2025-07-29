@@ -1,2 +1,18 @@
 
-<router-outlet />
+<div class="app-container">
+  @if (showNavigation) {
+    <app-navigation></app-navigation>
+  } @else {
+    <div class="page-content">
+      <header class="page-header">
+        <button class="back-btn" (click)="router.navigate(['/'])">
+          ← Back to Examples
+        </button>
+        <h1>{{ title }}</h1>
+      </header>
+      <main>
+        <router-outlet />
+      </main>
+    </div>
+  }
+</div>
