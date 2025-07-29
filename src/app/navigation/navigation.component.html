@@ -1,0 +1,51 @@
+<nav class="navigation-container">
+  <div class="nav-header">
+    <h1>🚀 Reactive Forms Practice</h1>
+    <p>Comprehensive Angular Reactive Forms Examples</p>
+  </div>
+  
+  <div class="nav-grid">
+    @for (item of navigationItems; track item.path) {
+      <a 
+        [routerLink]="item.path" 
+        routerLinkActive="active"
+        class="nav-card">
+        <div class="card-header">
+          <span class="icon">{{ item.icon }}</span>
+          <span class="difficulty" [class]="getDifficultyClass(item.difficulty)">
+            {{ item.difficulty }}
+          </span>
+        </div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+        <div class="card-footer">
+          <span class="cta">View Example →</span>
+        </div>
+      </a>
+    }
+  </div>
+  
+  <div class="nav-footer">
+    <div class="legend">
+      <h4>Difficulty Levels:</h4>
+      <div class="legend-items">
+        <span class="legend-item">
+          <span class="dot difficulty-beginner"></span>
+          Beginner - Basic concepts
+        </span>
+        <span class="legend-item">
+          <span class="dot difficulty-intermediate"></span>
+          Intermediate - More complex patterns
+        </span>
+        <span class="legend-item">
+          <span class="dot difficulty-advanced"></span>
+          Advanced - Complex validation & nested forms
+        </span>
+        <span class="legend-item">
+          <span class="dot difficulty-expert"></span>
+          Expert - Async validation & real-time checks
+        </span>
+      </div>
+    </div>
+  </div>
+</nav>
