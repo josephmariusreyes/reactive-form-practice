@@ -1,0 +1,356 @@
+<div class="form-container">
+  <h2>Advanced Registration Form (Custom Validators)</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="registration-form">
+    
+    <!-- Account Information Section -->
+    <div class="form-section">
+      <h3>🔐 Account Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input 
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="alphanumeric123"
+            [class.error]="isFieldInvalid('username')">
+          @if (isFieldInvalid('username')) {
+            <div class="error-messages">
+              @if (getFieldError('username', 'required')) {
+                <span class="error-message">Username is required</span>
+              }
+              @if (getFieldError('username', 'minlength')) {
+                <span class="error-message">Username must be at least 3 characters</span>
+              }
+              @if (getFieldError('username', 'maxlength')) {
+                <span class="error-message">Username must be less than 20 characters</span>
+              }
+              @if (getFieldError('username', 'noSpaces')) {
+                <span class="error-message">{{ getFieldError('username', 'noSpaces') }}</span>
+              }
+              @if (getFieldError('username', 'alphanumeric')) {
+                <span class="error-message">{{ getFieldError('username', 'alphanumeric') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Only letters and numbers, no spaces allowed</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Business Email *</label>
+          <input 
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="user@company.com"
+            [class.error]="isFieldInvalid('email')">
+          @if (isFieldInvalid('email')) {
+            <div class="error-messages">
+              @if (getFieldError('email', 'required')) {
+                <span class="error-message">Email is required</span>
+              }
+              @if (getFieldError('email', 'email')) {
+                <span class="error-message">Please enter a valid email address</span>
+              }
+              @if (getFieldError('email', 'businessEmail')) {
+                <span class="error-message">{{ getFieldError('email', 'businessEmail') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Personal email domains (gmail, yahoo, etc.) are not allowed</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input 
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="(555) 123-4567"
+            [class.error]="isFieldInvalid('phone')">
+          @if (isFieldInvalid('phone')) {
+            <div class="error-messages">
+              @if (getFieldError('phone', 'required')) {
+                <span class="error-message">Phone number is required</span>
+              }
+              @if (getFieldError('phone', 'phoneNumber')) {
+                <span class="error-message">{{ getFieldError('phone', 'phoneNumber') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Format: (XXX) XXX-XXXX or XXX-XXX-XXXX</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="age">Age (Even Numbers Only) *</label>
+          <input 
+            id="age"
+            type="number"
+            formControlName="age"
+            min="18"
+            max="100"
+            [class.error]="isFieldInvalid('age')">
+          @if (isFieldInvalid('age')) {
+            <div class="error-messages">
+              @if (getFieldError('age', 'required')) {
+                <span class="error-message">Age is required</span>
+              }
+              @if (getFieldError('age', 'min')) {
+                <span class="error-message">Must be at least 18 years old</span>
+              }
+              @if (getFieldError('age', 'max')) {
+                <span class="error-message">Must be less than 100 years old</span>
+              }
+              @if (getFieldError('age', 'evenNumber')) {
+                <span class="error-message">{{ getFieldError('age', 'evenNumber') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Only even numbers are allowed (18, 20, 22, etc.)</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Section -->
+    <div class="form-section">
+      <h3>🔒 Security</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="password">Strong Password *</label>
+          <input 
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter a strong password"
+            [class.error]="isFieldInvalid('password')">
+          @if (isFieldInvalid('password')) {
+            <div class="error-messages">
+              @if (getFieldError('password', 'required')) {
+                <span class="error-message">Password is required</span>
+              }
+              @if (getFieldError('password', 'minlength')) {
+                <span class="error-message">Password must be at least 8 characters</span>
+              }
+              @if (getFieldError('password', 'strongPassword')) {
+                @for (error of getStrongPasswordErrors('password'); track error) {
+                  <span class="error-message">{{ error }}</span>
+                }
+              }
+            </div>
+          }
+          <div class="password-requirements">
+            <small>Password must contain:</small>
+            <ul>
+              <li [class.valid]="hasUppercase(form.get('password')?.value)">One uppercase letter</li>
+              <li [class.valid]="hasLowercase(form.get('password')?.value)">One lowercase letter</li>
+              <li [class.valid]="hasNumber(form.get('password')?.value)">One number</li>
+              <li [class.valid]="hasSpecialChar(form.get('password')?.value)">One special character</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password *</label>
+          <input 
+            id="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Confirm your password"
+            [class.error]="isFieldInvalid('confirmPassword') || (form.errors?.['passwordMismatch'] && form.touched)">
+          @if (isFieldInvalid('confirmPassword')) {
+            <div class="error-messages">
+              @if (getFieldError('confirmPassword', 'required')) {
+                <span class="error-message">Password confirmation is required</span>
+              }
+            </div>
+          }
+          @if (form.errors?.['passwordMismatch'] && form.touched) {
+            <span class="error-message">Passwords do not match</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Section -->
+    <div class="form-section">
+      <h3>👤 Personal Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="website">Personal Website</label>
+          <input 
+            id="website"
+            type="url"
+            formControlName="website"
+            placeholder="https://your-website.com"
+            [class.error]="isFieldInvalid('website')">
+          @if (isFieldInvalid('website')) {
+            <div class="error-messages">
+              @if (getFieldError('website', 'url')) {
+                <span class="error-message">{{ getFieldError('website', 'url') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Optional - but must be a valid URL if provided</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="favoriteColor">Favorite Color (Hex Code) *</label>
+          <input 
+            id="favoriteColor"
+            type="text"
+            formControlName="favoriteColor"
+            placeholder="#FF5733"
+            [class.error]="isFieldInvalid('favoriteColor')">
+          @if (isFieldInvalid('favoriteColor')) {
+            <div class="error-messages">
+              @if (getFieldError('favoriteColor', 'required')) {
+                <span class="error-message">Favorite color is required</span>
+              }
+              @if (getFieldError('favoriteColor', 'hexColor')) {
+                <span class="error-message">{{ getFieldError('favoriteColor', 'hexColor') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Enter a hex color code (e.g., #FF5733)</small>
+          @if (form.get('favoriteColor')?.value && !isFieldInvalid('favoriteColor')) {
+            <div class="color-preview" [style.background-color]="form.get('favoriteColor')?.value"></div>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="startDate">Start Date *</label>
+          <input 
+            id="startDate"
+            type="date"
+            formControlName="startDate"
+            [class.error]="isFieldInvalid('startDate')">
+          @if (isFieldInvalid('startDate')) {
+            <div class="error-messages">
+              @if (getFieldError('startDate', 'required')) {
+                <span class="error-message">Start date is required</span>
+              }
+              @if (getFieldError('startDate', 'futureDate')) {
+                <span class="error-message">{{ getFieldError('startDate', 'futureDate') }}</span>
+              }
+            </div>
+          }
+          <small class="field-hint">Must be a future date</small>
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="bio">Bio (Minimum 10 words) *</label>
+          <textarea 
+            id="bio"
+            formControlName="bio"
+            rows="4"
+            placeholder="Tell us about yourself in at least 10 words..."
+            [class.error]="isFieldInvalid('bio')"></textarea>
+          <div class="char-info">
+            <span class="word-count">
+              Words: {{ getWordCount(form.get('bio')?.value) }}/10 minimum
+            </span>
+            <span class="char-count">{{ form.get('bio')?.value?.length || 0 }}/500 characters</span>
+          </div>
+          @if (isFieldInvalid('bio')) {
+            <div class="error-messages">
+              @if (getFieldError('bio', 'maxlength')) {
+                <span class="error-message">Bio must be less than 500 characters</span>
+              }
+              @if (getFieldError('bio', 'profanity')) {
+                <span class="error-message">{{ getFieldError('bio', 'profanity') }}</span>
+              }
+              @if (getFieldError('bio', 'minWords')) {
+                <span class="error-message">{{ getFieldError('bio', 'minWords') }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="form-section">
+      <h3>🛠️ Technical Skills (Select at least 2)</h3>
+      
+      <div class="form-group">
+        <div class="skills-grid">
+          @for (skill of availableSkills; track skill) {
+            <label class="checkbox-option">
+              <input 
+                type="checkbox"
+                [checked]="isSkillSelected(skill)"
+                (change)="onSkillChange(skill, $event)">
+              <span class="checkbox-custom"></span>
+              {{ skill }}
+            </label>
+          }
+        </div>
+        @if (isFieldInvalid('skills')) {
+          <div class="error-messages">
+            @if (getFieldError('skills', 'minArrayLength')) {
+              <span class="error-message">{{ getFieldError('skills', 'minArrayLength') }}</span>
+            }
+          </div>
+        }
+        <small class="field-hint">
+          Selected: {{ form.get('skills')?.value?.length || 0 }} skills
+        </small>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="reset-btn" (click)="onReset()">
+        🔄 Reset Form
+      </button>
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        ✅ Register Account
+      </button>
+    </div>
+    
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        <h4>⚠️ Please fix the following errors:</h4>
+        <ul>
+          @if (form.get('username')?.invalid && form.get('username')?.touched) {
+            <li>Fix username validation errors</li>
+          }
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <li>Fix email validation errors</li>
+          }
+          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+            <li>Fix phone number validation errors</li>
+          }
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <li>Fix password strength requirements</li>
+          }
+          @if (form.errors?.['passwordMismatch']) {
+            <li>Passwords must match</li>
+          }
+          @if (form.get('skills')?.invalid && form.get('skills')?.touched) {
+            <li>Select at least 2 skills</li>
+          }
+        </ul>
+      </div>
+    }
+  </form>
+  
+  <!-- Form Debug Info -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Touched:</strong> {{ form.touched }}</p>
+    <details>
+      <summary><strong>Form Errors:</strong></summary>
+      <pre>{{ form.errors | json }}</pre>
+    </details>
+    <details>
+      <summary><strong>Form Value:</strong></summary>
+      <pre>{{ form.value | json }}</pre>
+    </details>
+  </div>
+</div>
