@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'reactive-form-basic-form-array',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JsonPipe
   ],
   templateUrl: './reactive-form-basic-form-array.component.html',
   styleUrls: ['./reactive-form-basic-form-array.component.scss']
@@ -47,7 +49,22 @@ export class ReactiveFormBasicFormArray implements OnInit {
   }
 
   onSubmit(): void {
-    alert(JSON.stringify(this.form.getRawValue(), null, 2));
+    if (this.form.valid) {
+      console.log('Form submitted:', this.form.getRawValue());
+      alert('Form submitted successfully!\n\n' + JSON.stringify(this.form.getRawValue(), null, 2));
+    } else {
+      this.markAllFieldsAsTouched();
+      alert('Please fix the errors in the form before submitting.');
+    }
+  }
+  
+  // Helper method to mark all fields as touched for validation display
+  private markAllFieldsAsTouched(): void {
+    this.friendsArray.controls.forEach(control => {
+      Object.keys(control.controls).forEach(key => {
+        control.get(key)?.markAsTouched();
+      });
+    });
   }
   
   // Add a new friend FormGroup to the FormArray.
@@ -75,14 +92,32 @@ export class ReactiveFormBasicFormArray implements OnInit {
     });
   }  
 
-  // Create a form group for a single friend with additional fields.
+  // Create a form group for a single friend with enhanced validation.
   private createFriendForm(data: DtoFriends): FormGroup<FriendForm> {
     return new FormGroup<FriendForm>({
-      name: new FormControl(data?.name ?? '', { nonNullable: true, validators: [Validators.required] }),
-      age: new FormControl(data?.age ?? 0, { nonNullable: true, validators: [Validators.min(0)] }),
-      contactNo: new FormControl(data?.contactNo ?? '', { nonNullable: true, validators: [Validators.required] }),
-      work: new FormControl(data?.work ?? '', { nonNullable: true, validators: [Validators.required] }),
-      address: new FormControl(data?.address ?? '', { nonNullable: true, validators: [Validators.required] })
+      name: new FormControl(data?.name ?? '', { 
+        nonNullable: true, 
+        validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)] 
+      }),
+      age: new FormControl(data?.age ?? 0, { 
+        nonNullable: true, 
+        validators: [Validators.required, Validators.min(1), Validators.max(120)] 
+      }),
+      contactNo: new FormControl(data?.contactNo ?? '', { 
+        nonNullable: true, 
+        validators: [
+          Validators.required, 
+          Validators.pattern(/^[\+]?[1-9][\d]{0,15}$/) // Basic international phone number pattern
+        ] 
+      }),
+      work: new FormControl(data?.work ?? '', { 
+        nonNullable: true, 
+        validators: [Validators.required, Validators.minLength(2), Validators.maxLength(100)] 
+      }),
+      address: new FormControl(data?.address ?? '', { 
+        nonNullable: true, 
+        validators: [Validators.required, Validators.minLength(10), Validators.maxLength(200)] 
+      })
     });
   }
 

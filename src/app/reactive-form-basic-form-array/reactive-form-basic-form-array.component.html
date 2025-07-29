@@ -1,17 +1,125 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div formArrayName="friends">
-    @for (friend of friendsArray.controls; track friend) {
-      <div [formGroup]="friend" class="friend-item">
-        <input formControlName="name" placeholder="Name" />
-        <input formControlName="age" type="number" placeholder="Age" />
-        <input formControlName="contactNo" placeholder="Contact No" />
-        <input formControlName="work" placeholder="Work" />
-        <input formControlName="address" placeholder="Address" />
-        <button type="button" (click)="removeFriend(friendsArray.controls.indexOf(friend))">Remove</button>
+<div class="form-container">
+  <h2>Friends Management Form (Form Array Example)</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="friends-form">
+    <div formArrayName="friends" class="friends-array">
+      @for (friend of friendsArray.controls; track friend; let i = $index) {
+        <div [formGroup]="friend" class="friend-card">
+          <div class="card-header">
+            <h3>Friend #{{ i + 1 }}</h3>
+            <button 
+              type="button" 
+              class="remove-btn" 
+              (click)="removeFriend(i)"
+              [disabled]="friendsArray.length <= 1">
+              ✕
+            </button>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name-{{ i }}">Name *</label>
+              <input 
+                id="name-{{ i }}"
+                formControlName="name" 
+                placeholder="Enter full name"
+                [class.error]="friend.get('name')?.invalid && friend.get('name')?.touched" />
+              @if (friend.get('name')?.invalid && friend.get('name')?.touched) {
+                <span class="error-message">Name is required</span>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="age-{{ i }}">Age *</label>
+              <input 
+                id="age-{{ i }}"
+                formControlName="age" 
+                type="number" 
+                placeholder="Age"
+                min="0"
+                max="120"
+                [class.error]="friend.get('age')?.invalid && friend.get('age')?.touched" />
+              @if (friend.get('age')?.invalid && friend.get('age')?.touched) {
+                <span class="error-message">
+                  @if (friend.get('age')?.errors?.['required']) {
+                    Age is required
+                  } @else if (friend.get('age')?.errors?.['min']) {
+                    Age must be positive
+                  } @else if (friend.get('age')?.errors?.['max']) {
+                    Age must be less than 120
+                  }
+                </span>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="contactNo-{{ i }}">Contact Number *</label>
+              <input 
+                id="contactNo-{{ i }}"
+                formControlName="contactNo" 
+                placeholder="Phone number"
+                [class.error]="friend.get('contactNo')?.invalid && friend.get('contactNo')?.touched" />
+              @if (friend.get('contactNo')?.invalid && friend.get('contactNo')?.touched) {
+                <span class="error-message">
+                  @if (friend.get('contactNo')?.errors?.['required']) {
+                    Contact number is required
+                  } @else if (friend.get('contactNo')?.errors?.['pattern']) {
+                    Invalid phone number format
+                  }
+                </span>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="work-{{ i }}">Occupation *</label>
+              <input 
+                id="work-{{ i }}"
+                formControlName="work" 
+                placeholder="Job title or profession"
+                [class.error]="friend.get('work')?.invalid && friend.get('work')?.touched" />
+              @if (friend.get('work')?.invalid && friend.get('work')?.touched) {
+                <span class="error-message">Occupation is required</span>
+              }
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="address-{{ i }}">Address *</label>
+              <textarea 
+                id="address-{{ i }}"
+                formControlName="address" 
+                placeholder="Full address"
+                rows="2"
+                [class.error]="friend.get('address')?.invalid && friend.get('address')?.touched"></textarea>
+              @if (friend.get('address')?.invalid && friend.get('address')?.touched) {
+                <span class="error-message">Address is required</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="add-btn" (click)="addFriend()">
+        ➕ Add Friend
+      </button>
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        Submit Friends List
+      </button>
+    </div>
+    
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        Please fix the errors above before submitting.
       </div>
     }
-  </div>
+  </form>
   
-  <button type="button" (click)="addFriend()">Add Friend</button>
-  <button type="submit">Submit</button>
-</form>
+  <!-- Form Debug Info (remove in production) -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Value:</strong></p>
+    <pre>{{ form.value | json }}</pre>
+  </div>
+</div>
