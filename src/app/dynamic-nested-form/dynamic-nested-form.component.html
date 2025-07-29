@@ -1,0 +1,267 @@
+<div class="form-container">
+  <h2>Company & Employees Management (Dynamic Nested Forms)</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="company-form">
+    
+    <!-- Company Information Section -->
+    <div class="form-section company-section">
+      <h3>🏢 Company Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="companyName">Company Name *</label>
+          <input 
+            id="companyName"
+            type="text"
+            formControlName="companyName"
+            placeholder="Enter company name"
+            [class.error]="form.get('companyName')?.invalid && form.get('companyName')?.touched">
+          @if (form.get('companyName')?.invalid && form.get('companyName')?.touched) {
+            <span class="error-message">Company name is required (min. 2 characters)</span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="establishedYear">Established Year *</label>
+          <input 
+            id="establishedYear"
+            type="number"
+            formControlName="establishedYear"
+            min="1800"
+            [max]="currentYear"
+            [class.error]="form.get('establishedYear')?.invalid && form.get('establishedYear')?.touched">
+          @if (form.get('establishedYear')?.invalid && form.get('establishedYear')?.touched) {
+            <span class="error-message">Please enter a valid year</span>
+          }
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="headquarters">Headquarters *</label>
+          <input 
+            id="headquarters"
+            type="text"
+            formControlName="headquarters"
+            placeholder="City, State/Country"
+            [class.error]="form.get('headquarters')?.invalid && form.get('headquarters')?.touched">
+          @if (form.get('headquarters')?.invalid && form.get('headquarters')?.touched) {
+            <span class="error-message">Headquarters location is required</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Employees Section -->
+    <div class="form-section employees-section">
+      <div class="section-header">
+        <h3>👥 Employees ({{ employeesArray.length }})</h3>
+        <button type="button" class="add-employee-btn" (click)="addEmployee()">
+          ➕ Add Employee
+        </button>
+      </div>
+      
+      <div formArrayName="employees" class="employees-container">
+        @for (employee of employeesArray.controls; track employee; let empIndex = $index) {
+          <div [formGroup]="employee" class="employee-card">
+            <div class="card-header">
+              <h4>Employee #{{ empIndex + 1 }}</h4>
+              <button 
+                type="button" 
+                class="remove-btn" 
+                (click)="removeEmployee(empIndex)"
+                [disabled]="employeesArray.length <= 1">
+                ✕
+              </button>
+            </div>
+            
+            <!-- Employee Basic Info -->
+            <div class="employee-basic-info">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="firstName-{{ empIndex }}">First Name *</label>
+                  <input 
+                    id="firstName-{{ empIndex }}"
+                    type="text"
+                    formControlName="firstName"
+                    placeholder="First name"
+                    [class.error]="employee.get('firstName')?.invalid && employee.get('firstName')?.touched">
+                  @if (employee.get('firstName')?.invalid && employee.get('firstName')?.touched) {
+                    <span class="error-message">First name is required</span>
+                  }
+                </div>
+                
+                <div class="form-group">
+                  <label for="lastName-{{ empIndex }}">Last Name *</label>
+                  <input 
+                    id="lastName-{{ empIndex }}"
+                    type="text"
+                    formControlName="lastName"
+                    placeholder="Last name"
+                    [class.error]="employee.get('lastName')?.invalid && employee.get('lastName')?.touched">
+                  @if (employee.get('lastName')?.invalid && employee.get('lastName')?.touched) {
+                    <span class="error-message">Last name is required</span>
+                  }
+                </div>
+                
+                <div class="form-group">
+                  <label for="email-{{ empIndex }}">Email *</label>
+                  <input 
+                    id="email-{{ empIndex }}"
+                    type="email"
+                    formControlName="email"
+                    placeholder="employee@company.com"
+                    [class.error]="employee.get('email')?.invalid && employee.get('email')?.touched">
+                  @if (employee.get('email')?.invalid && employee.get('email')?.touched) {
+                    <span class="error-message">Valid email is required</span>
+                  }
+                </div>
+                
+                <div class="form-group">
+                  <label for="department-{{ empIndex }}">Department *</label>
+                  <select 
+                    id="department-{{ empIndex }}"
+                    formControlName="department"
+                    [class.error]="employee.get('department')?.invalid && employee.get('department')?.touched">
+                    <option value="">Select department</option>
+                    @for (dept of departments; track dept) {
+                      <option [value]="dept">{{ dept }}</option>
+                    }
+                  </select>
+                  @if (employee.get('department')?.invalid && employee.get('department')?.touched) {
+                    <span class="error-message">Department is required</span>
+                  }
+                </div>
+                
+                <div class="form-group">
+                  <label for="salary-{{ empIndex }}">Annual Salary *</label>
+                  <input 
+                    id="salary-{{ empIndex }}"
+                    type="number"
+                    formControlName="salary"
+                    min="30000"
+                    max="500000"
+                    placeholder="75000"
+                    [class.error]="employee.get('salary')?.invalid && employee.get('salary')?.touched">
+                  @if (employee.get('salary')?.invalid && employee.get('salary')?.touched) {
+                    <span class="error-message">Salary must be between $30,000 and $500,000</span>
+                  }
+                </div>
+                
+                <div class="form-group">
+                  <label for="startDate-{{ empIndex }}">Start Date *</label>
+                  <input 
+                    id="startDate-{{ empIndex }}"
+                    type="date"
+                    formControlName="startDate"
+                    [class.error]="employee.get('startDate')?.invalid && employee.get('startDate')?.touched">
+                  @if (employee.get('startDate')?.invalid && employee.get('startDate')?.touched) {
+                    <span class="error-message">Start date is required</span>
+                  }
+                </div>
+              </div>
+              
+              <div class="form-group manager-checkbox">
+                <label class="checkbox-option">
+                  <input type="checkbox" formControlName="isManager">
+                  <span class="checkbox-custom"></span>
+                  This employee is a manager
+                </label>
+              </div>
+            </div>
+            
+            <!-- Skills Section -->
+            <div class="skills-section">
+              <div class="skills-header">
+                <h5>🛠️ Skills</h5>
+                <button type="button" class="add-skill-btn" (click)="addSkill(empIndex)">
+                  ➕ Add Skill
+                </button>
+              </div>
+              
+              <div formArrayName="skills" class="skills-container">
+                @for (skill of getSkillsArray(empIndex).controls; track skill; let skillIndex = $index) {
+                  <div [formGroup]="skill" class="skill-item">
+                    <div class="skill-grid">
+                      <div class="form-group">
+                        <label for="skillName-{{ empIndex }}-{{ skillIndex }}">Skill Name *</label>
+                        <input 
+                          id="skillName-{{ empIndex }}-{{ skillIndex }}"
+                          type="text"
+                          formControlName="skillName"
+                          placeholder="e.g., JavaScript, Leadership"
+                          [class.error]="skill.get('skillName')?.invalid && skill.get('skillName')?.touched">
+                        @if (skill.get('skillName')?.invalid && skill.get('skillName')?.touched) {
+                          <span class="error-message">Skill name is required</span>
+                        }
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="level-{{ empIndex }}-{{ skillIndex }}">Level *</label>
+                        <select 
+                          id="level-{{ empIndex }}-{{ skillIndex }}"
+                          formControlName="level"
+                          [class.error]="skill.get('level')?.invalid && skill.get('level')?.touched">
+                          @for (level of skillLevels; track level.value) {
+                            <option [value]="level.value">{{ level.label }}</option>
+                          }
+                        </select>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="yearsOfExperience-{{ empIndex }}-{{ skillIndex }}">Years *</label>
+                        <input 
+                          id="yearsOfExperience-{{ empIndex }}-{{ skillIndex }}"
+                          type="number"
+                          formControlName="yearsOfExperience"
+                          min="0"
+                          max="50"
+                          placeholder="2"
+                          [class.error]="skill.get('yearsOfExperience')?.invalid && skill.get('yearsOfExperience')?.touched">
+                        @if (skill.get('yearsOfExperience')?.invalid && skill.get('yearsOfExperience')?.touched) {
+                          <span class="error-message">Valid experience is required</span>
+                        }
+                      </div>
+                      
+                      <div class="skill-actions">
+                        <button 
+                          type="button" 
+                          class="remove-skill-btn" 
+                          (click)="removeSkill(empIndex, skillIndex)"
+                          [disabled]="getSkillsArray(empIndex).length <= 1">
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        💾 Save Company Data
+      </button>
+    </div>
+    
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        Please fix all errors before submitting the form.
+      </div>
+    }
+  </form>
+  
+  <!-- Form Debug Info -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Employees Count:</strong> {{ employeesArray.length }}</p>
+    <details>
+      <summary><strong>Form Value:</strong></summary>
+      <pre>{{ form.value | json }}</pre>
+    </details>
+  </div>
+</div>
