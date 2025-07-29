@@ -1,17 +1,71 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div formArrayName="friends">
-      @for (friend of friendsArray.controls; track friend) {
+<div class="form-container">
+  <h2>Basic Friends List (Simple Form Array)</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="friends-form">
+    <div formArrayName="friends" class="friends-list">
+      @for (friend of friendsArray.controls; track friend; let i = $index) {
         <div [formGroup]="friend" class="friend-item">
-          <label>
-            Name:
-            <input formControlName="name" type="text" />
-          </label>
-          <label>
-            Age:
-            <input formControlName="age" type="number" />
-          </label>
+          <div class="item-header">
+            <span class="item-number">{{ i + 1 }}</span>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name-{{ i }}">Name *</label>
+              <input 
+                id="name-{{ i }}"
+                formControlName="name" 
+                type="text" 
+                placeholder="Enter name"
+                [class.error]="friend.get('name')?.invalid && friend.get('name')?.touched" />
+              @if (friend.get('name')?.invalid && friend.get('name')?.touched) {
+                <span class="error-message">Name is required</span>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="age-{{ i }}">Age *</label>
+              <input 
+                id="age-{{ i }}"
+                formControlName="age" 
+                type="number" 
+                placeholder="Age"
+                min="0"
+                max="120"
+                [class.error]="friend.get('age')?.invalid && friend.get('age')?.touched" />
+              @if (friend.get('age')?.invalid && friend.get('age')?.touched) {
+                <span class="error-message">
+                  @if (friend.get('age')?.errors?.['required']) {
+                    Age is required
+                  } @else if (friend.get('age')?.errors?.['min']) {
+                    Age must be positive
+                  }
+                </span>
+              }
+            </div>
+          </div>
         </div>
       }
     </div>
-    <button type="submit">Submit</button>
+    
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" [disabled]="form.invalid">
+        Submit List
+      </button>
+    </div>
+    
+    @if (form.invalid && form.touched) {
+      <div class="form-summary-error">
+        Please complete all required fields.
+      </div>
+    }
   </form>
+  
+  <!-- Form Debug Info -->
+  <div class="debug-section">
+    <h3>Form Status (Debug)</h3>
+    <p><strong>Valid:</strong> {{ form.valid }}</p>
+    <p><strong>Value:</strong></p>
+    <pre>{{ form.value | json }}</pre>
+  </div>
+</div>
